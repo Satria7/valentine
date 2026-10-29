@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Will you be my Valentine?</title>
+<style>
+  :root { --bg:#f6d3da; --title:#a3122e; --yes:#3fa843; --no:#e0212e; --line:#20405e; --cat:#3fb7dd; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#2d1019; --title:#ff8fa6; } }
+  :root[data-theme="dark"] { --bg:#2d1019; --title:#ff8fa6; }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { height: 100%; }
+  body {
+    background: var(--bg); overflow: hidden; text-align: center;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    padding: env(safe-area-inset-top, 0px) 0 env(safe-area-inset-bottom, 0px);
+  }
+  .view { position: absolute; inset: 0; padding-top: calc(11vh + env(safe-area-inset-top, 0px)); }
+  h1 { color: var(--title); font-size: clamp(1.3rem, 5.5vw, 2rem); font-weight: 700; padding: 0 1rem; }
+  .buttons { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 18px; flex-wrap: nowrap; }
+  button { border: 0; color: #fff; cursor: pointer; font-family: inherit; flex: none; }
+  .yes { background: var(--yes); font-size: 18px; padding: .3em .75em; border-radius: 4px;
+         transition: font-size .35s cubic-bezier(.3,1.4,.5,1); }
+  .no { background: var(--no); font-size: 14px; padding: .5em .9em; border-radius: 4px; white-space: nowrap; }
+  .no:active { transform: scale(.96); }
+
+  .cat { width: min(62vw, 300px); margin-top: 28px; overflow: visible; }
+  .cat [class^="m"] { display: none; }
+  .cat[data-mood="0"] .m0, .cat[data-mood="1"] .m1, .cat[data-mood="2"] .m2, .cat[data-mood="3"] .m3 { display: inline; }
+  .cat.shake { animation: shake .4s; }
+  @keyframes shake { 20% { transform: translateX(-8px) rotate(-3deg); } 50% { transform: translateX(8px) rotate(3deg); } 80% { transform: translateX(-4px); } }
+  .tear { animation: tear 1s ease-in infinite; transform-box: fill-box; }
+  @keyframes tear { 0% { transform: translateY(0); opacity: .9; } 100% { transform: translateY(26px); opacity: 0; } }
+  .bob { animation: bob 1.6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+  @keyframes bob { 50% { transform: translateY(-4px) scale(1.04); } }
+
+  #win { display: none; }
+  body.won #ask { display: none; }
+  body.won #win { display: block; animation: pop .6s cubic-bezier(.2,1.4,.4,1); }
+  @keyframes pop { from { transform: scale(.7); opacity: 0; } }
+  #win .scene { width: min(75vw, 340px); margin-top: 22px; }
+
+  .fl { position: fixed; bottom: -6vh; color: #ff5c80; pointer-events: none; animation: rise linear forwards; z-index: 5; }
+  @keyframes rise { to { transform: translateY(-112vh) translateX(var(--dx)) rotate(var(--r)); opacity: 0; } }
+</style>
+</head>
+<body>
+
+<div class="view" id="ask">
+  <h1>Will you be my Valentine?</h1>
+  <div class="buttons">
+    <button class="yes" id="yes">Yes</button>
+    <button class="no" id="no">No</button>
+  </div>
+
+  <svg class="cat" id="cat" viewBox="0 0 200 170" data-mood="0" aria-hidden="true">
+    <g stroke="var(--line)" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">
+      <path d="M42 72 L50 22 L88 48Z" fill="var(--cat)"/><path d="M158 72 L150 22 L112 48Z" fill="var(--cat)"/>
+      <path d="M28 125C28 72 60 44 100 44s72 28 72 81c0 25-32 35-72 35s-72-10-72-35Z" fill="var(--cat)"/>
+      <ellipse cx="100" cy="148" rx="40" ry="12" fill="#fff" stroke="none"/>
+      <circle cx="56" cy="112" r="8" fill="#ff9fb8" opacity=".65" stroke="none"/><circle cx="144" cy="112" r="8" fill="#ff9fb8" opacity=".65" stroke="none"/>
+      <g class="m0" fill="none"><path d="M62 98q10-12 20 0M118 98q10-12 20 0"/><path d="M90 110q5 7 10 0q5 7 10 0"/>
+        <path class="bob" d="M100 40c-6-10-19-2-10 8l10 9 10-9c9-10-4-18-10-8z" fill="#ff8fb0" stroke="none"/></g>
+      <g class="m1"><circle cx="72" cy="96" r="7" fill="var(--line)"/><circle cx="128" cy="96" r="7" fill="var(--line)"/>
+        <circle cx="74" cy="93" r="2.4" fill="#fff" stroke="none"/><circle cx="130" cy="93" r="2.4" fill="#fff" stroke="none"/>
+        <ellipse cx="100" cy="116" rx="5" ry="4" fill="var(--line)"/></g>
+      <g class="m2"><circle cx="72" cy="98" r="9" fill="var(--line)"/><circle cx="128" cy="98" r="9" fill="var(--line)"/>
+        <circle cx="75" cy="94" r="3.4" fill="#fff" stroke="none"/><circle cx="131" cy="94" r="3.4" fill="#fff" stroke="none"/>
+        <path d="M58 82l22 6M142 82l-22 6" fill="none"/><path d="M90 122q10-9 20 0" fill="none"/>
+        <ellipse class="tear" cx="60" cy="112" rx="3" ry="5" fill="#bfeaff" stroke="none"/></g>
+      <g class="m3"><path d="M62 96q10 10 20 0M118 96q10 10 20 0" fill="none"/>
+        <path d="M88 112q12 17 24 0z" fill="var(--line)"/>
+        <ellipse class="tear" cx="66" cy="104" rx="4" ry="7" fill="#bfeaff" stroke="none"/>
+        <ellipse class="tear" cx="134" cy="104" rx="4" ry="7" fill="#bfeaff" stroke="none" style="animation-delay:.4s"/></g>
+    </g>
+  </svg>
+</div>
+
+<div class="view" id="win">
+  <h1>Knew you would say yes!</h1>
+  <svg class="scene" viewBox="0 0 240 200" aria-hidden="true">
+    <g stroke="var(--line)" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">
+      <path d="M52 112L58 78L90 98Z" fill="var(--cat)"/><path d="M188 112L182 78L150 98Z" fill="var(--cat)"/>
+      <path d="M36 170C36 120 70 96 120 96s84 24 84 74c0 20-30 28-84 28s-84-8-84-28Z" fill="var(--cat)"/>
+      <path d="M96 150q7 9 14 0M130 150q7 9 14 0" fill="none"/><path d="M110 164q10 9 20 0" fill="#fff"/>
+      <path d="M100 52C92 22 104 8 112 8s14 14 10 46Z" fill="#fff" transform="rotate(-8 106 50)"/>
+      <path d="M142 52C138 22 150 8 158 8s10 18 0 46Z" fill="#fff" transform="rotate(8 150 50)"/>
+      <ellipse cx="130" cy="92" rx="56" ry="42" fill="#fff"/>
+      <path d="M108 86q7-9 14 0M140 86q7-9 14 0" fill="none"/>
+      <ellipse cx="132" cy="100" rx="9" ry="7" fill="#ff7f9c" stroke="none"/>
+      <ellipse cx="72" cy="122" rx="22" ry="14" fill="#fff" transform="rotate(-28 72 122)"/>
+      <ellipse cx="188" cy="118" rx="22" ry="14" fill="#fff" transform="rotate(24 188 118)"/>
+    </g>
+    <path class="bob" d="M40 40c-5-8-16-2-9 7l9 8 9-8c7-9-4-15-9-7z" fill="#e8344e"/>
+    <path class="bob" d="M204 30c-5-8-16-2-9 7l9 8 9-8c7-9-4-15-9-7z" fill="#e8344e" style="animation-delay:.5s"/>
+  </svg>
+</div>
+
+<script>
+  const yesButton = document.getElementById('yes');
+  const noButton = document.getElementById('no');
+  const cat = document.getElementById('cat');
+  const messages = ["Are you sure?", "Really sure??", "Are you positive?", "Pookie please...", "Just think about it!",
+    "If you say no, I will be really sad...", "I will be very sad...", "I will be very very very sad...",
+    "Ok fine, I will stop asking...", "Just kidding, say yes please! \u2764\uFE0F"];
+  let messageIndex = 0, clicks = 0;
+
+  function handleNoClick() {
+    noButton.textContent = messages[messageIndex];
+    messageIndex = (messageIndex + 1) % messages.length;
+    clicks++;
+    const currentSize = parseFloat(window.getComputedStyle(yesButton).fontSize);
+    yesButton.style.fontSize = `${Math.min(currentSize * 1.5, 1800)}px`;
+    cat.dataset.mood = clicks < 1 ? 0 : clicks <= 3 ? 1 : clicks <= 6 ? 2 : 3;
+    cat.classList.remove('shake'); void cat.getBoundingClientRect(); cat.classList.add('shake');
+  }
+
+  function handleYesClick() {
+    document.body.classList.add('won');
+    for (let k = 0; k < 30; k++) {
+      const h = document.createElement('div');
+      h.className = 'fl'; h.textContent = '\u2665';
+      h.style.cssText = `left:${Math.random() * 100}vw;font-size:${14 + Math.random() * 28}px;` +
+        `--dx:${(Math.random() - .5) * 80}px;--r:${(Math.random() - .5) * 60}deg;` +
+        `animation-duration:${3 + Math.random() * 3}s;animation-delay:${Math.random() * 1.2}s`;
+      document.body.appendChild(h);
+      setTimeout(() => h.remove(), 8000);
+    }
+  }
+  noButton.addEventListener('click', handleNoClick);
+  yesButton.addEventListener('click', handleYesClick);
+</script>
+</body>
+</html>
